@@ -1,0 +1,213 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
+#include <math.h>
+
+#define size 20
+
+struct node
+{
+  char  info;
+  struct node*link;
+}*top=NULL,*temp,*ptr;
+ 
+char stack[size];
+float s[size];
+int t=-1;
+
+ 
+void push (int value)
+{
+  struct node *newNode;
+  newNode = (struct node *) malloc (sizeof (struct node));
+  newNode->info = value;
+  if (top == NULL)
+    newNode->link = NULL;
+  else
+    newNode->link = top;
+  top = newNode;
+  return;
+}
+
+
+char pop()
+{
+  char item;
+  if (top == NULL)
+    printf ("\nStack is Empty!!!\n");
+  else
+    {
+      struct node *temp = top;
+      item=temp->info;
+      top = temp->link;
+      free (temp);
+      //printf("\n %c \n \n",item);
+    }
+    return item;
+}
+
+int priority(char item)
+{
+if(item=='^')
+return 3;
+else if(item=='*'||item=='/')
+return 2;
+else if(item=='+'||item=='-')
+return 1;
+else
+return(0);
+}
+
+void push_ev(int p)
+{
+  if(t==size-1)
+ {
+  printf("\nStack Overflow");
+  return;
+ }
+ else
+ {
+ t++;
+ s[t]=(float)p;
+ return;
+ }
+}
+
+void oper(char c)
+{
+ if (c=='+')
+ {
+  s[t-1]=s[t-1]+s[t];
+  t--;
+ }
+ else if (c=='-')
+ {
+  s[t-1]=s[t-1]-s[t];
+  t--;
+ }
+  else if (c=='*')
+ {
+  s[t-1]=s[t-1]*s[t];
+  t--;
+ }
+  else if (c=='/')
+ {
+  s[t-1]=s[t-1]/s[t];
+  t--;
+ }
+  else if (c=='^')
+ {
+  s[t-1]=pow(s[t-1],s[t]);
+  t--;
+ }
+
+
+}
+
+
+int is_operator(char item)
+{
+if(item == '+'||item=='-'||item=='*'||item=='/'||item=='^')
+return 1;
+else
+return 0;
+}
+
+void evaluation(char post_ev[])
+{
+ int i=0,j;
+ char ch;
+ ch=post_ev[0];
+ while(ch!='\0')
+ {
+  if(is_operator(ch)==0)
+  {printf("\n Enter the value of %c",ch);
+  scanf("%d",&j);
+  push_ev(j);
+  }
+  else
+  oper(ch);
+  ch=post_ev[++i];
+ }
+}
+
+
+
+void infpost(char in_fix[], char post_fix[])
+{
+char x;
+char item;
+push('(');
+strcat(in_fix,")");
+int i,j;
+i=0;
+j=0;
+item=in_fix[i];
+while(item!='\0')
+{
+item=in_fix[i];
+if (item=='('||item=='^')
+ {
+ push(item);
+ }
+ else if(isdigit(item)||isalpha(item))
+ 
+ {
+ post_fix[j]=item;
+ j++;
+ }
+else if(is_operator(item)==1)
+{
+ x=pop();
+while(is_operator(x)==1 && priority(x)>=priority(item))
+{
+post_fix[j]=x;
+j++;
+x=pop();
+}
+push(x);
+push(item);
+
+}
+else if(')')
+{
+x=pop();
+  while(x!='(')
+    {
+     post_fix[j]=x;
+     j++;
+     x=pop();
+    }
+}
+else
+{
+printf("\n Invalid infix expression");
+
+exit(1);
+}
+i++;
+item=in_fix[i];
+}
+if(top>0)
+{
+printf("\n Invalid infix expression");
+exit(1);
+}
+post_fix[j]='\0';
+}
+
+
+int main()
+{
+char infix[size],postfix[size];
+printf("\n Enter the infix Expression:");
+scanf("%s",infix);
+infpost(infix,postfix);
+printf("\n The required postfix expression is:");
+puts(postfix);
+printf("\n POSTFIX EVALUATION");
+evaluation(postfix);
+printf("\n Evaluated value= %f",s[t]);
+return 0;
+}
