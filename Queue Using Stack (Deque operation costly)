@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #define max 6
-int a[max], b[max],top1=-1,top2=-1,n=0,m=0;
+int a[max], b[max],top1=-1,top2=-1,n=0,m=0,n1,m1;
 
 void st1push(int item) {
     top1++;
@@ -51,24 +51,22 @@ void qins(int item) {
 
 
 void qdel() {
-  int ditem,item,i,n1,m1;
+  int ditem,item,i;
   if (top1== -1 && top2==-1) {
     printf("\n Underflow");
     return;
   } 
-  n1=n;
-  for(i=0;i<n1;i++)
+while(n>0)
     {
-      printf("\n value of n is %d",n);
       item=st1pop();
       n--;
       st2push(item);
       m++;
     }
-  m1=m;
   ditem=st2pop();
-  for(i=0;i<m1;i++)
-    {
+  m1=m;
+while(m>0)
+  {
       item=st2pop();
       m--;
       st1push(item);
