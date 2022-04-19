@@ -1,0 +1,86 @@
+#include <stdio.h>
+
+int *top, *arr, *next;
+int fr;
+
+void push(int item, int sn) {
+  int i = fr;
+  fr=next[i];
+  next[i] = top[sn];
+  top[sn] = i;
+  arr[i] = item;
+}
+int pop(int sn) {
+
+  int i = top[sn];
+  top[sn] = next[i];
+  next[i] = fr;
+  fr = i;
+  return arr[i];
+}
+
+int main() 
+{
+  int o, item, stno, ditem, size, k;
+  fr=0;
+  printf("\n Enter the size of the array");
+  scanf("%d", &size);
+  arr = calloc(size, sizeof(int));
+  next = calloc(size+1, sizeof(int));
+  for (int i = 0; i < size - 1; i++)
+    next[i] = i + 1;
+  next[size - 1] = -1;
+
+  do {
+    printf("\n Enter the no: of stacks you want to implement");
+    scanf("%d", &k);
+    if (k > size) {
+      printf("\n No: of stacks should not exceed array size!!!");
+    }
+  } while (k > size);
+  top = calloc(k, sizeof(int));
+  for (int i = 0; i < k; i++)
+    top[i] = -1;
+
+
+  
+  do {
+    
+    printf("\n Select an option");
+    printf("\n 1.Push element \n 2.Pop element \n 3.Exit");
+    scanf("%d", &o);
+    switch (o) {
+    case 1:
+      if (fr== -1) {
+        printf("\n Stacks are full (OVERFLOW)");
+      } else {
+        printf("\n Enter the element you would like to insert \n");
+        scanf("%d", &item);
+        printf(
+            "\n Enter the stack number to which you would like to insert (0-3) \n");
+        scanf("%d", &stno);
+        if (stno > k-1)
+          printf("\n Stack no: exceeding");
+        else
+          push(item,stno);
+      }
+      break;
+    case 2:
+      printf("\n From which stack do you want to delete? (0-3) \n");
+      scanf("%d", &stno);
+      if (top[stno] == -1)
+        printf("\n Stack Underflow \n");
+      else {
+        ditem = pop(stno);
+        printf("\n Deleted item is %d", ditem);
+      }
+      break;
+    case 3:
+      exit(0);
+      break;
+    default:
+      printf("\n Invalid Option");
+    }
+  } while (o != 3);
+  return 0;
+}
