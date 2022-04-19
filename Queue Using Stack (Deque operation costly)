@@ -1,0 +1,124 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define max 6
+int a[max], b[max],top1=-1,top2=-1,n=0,m=0;
+
+void st1push(int item) {
+    top1++;
+  a[top1] = item;
+  return;
+}
+
+void st2push(int item) {
+  if (top2 == max - 1) {
+    printf("\n Overflow");
+    return;
+  } else
+    top2++;
+  b[top2] = item;
+  return;
+}
+
+int st1pop() {
+  int ditem;
+    ditem = a[top1];
+    top1--;
+    return ditem;
+  
+}
+
+int st2pop() {
+  int ditem;
+    ditem = b[top2];
+    top2--;
+    return ditem;
+ 
+}
+
+
+
+void qins(int item) {
+  if (top1 == max - 1) {
+    printf("\n Overflow");
+    return;
+  } 
+  else{
+  st1push(item);
+    n++;
+  return;}
+}
+
+
+void qdel() {
+  int ditem,item,i,n1,m1;
+  if (top1== -1 && top2==-1) {
+    printf("\n Underflow");
+    return;
+  } 
+  n1=n;
+  for(i=0;i<n1;i++)
+    {
+      printf("\n value of n is %d",n);
+      item=st1pop();
+      n--;
+      st2push(item);
+      m++;
+    }
+  m1=m;
+  ditem=st2pop();
+  for(i=0;i<m1;i++)
+    {
+      item=st2pop();
+      m--;
+      st1push(item);
+      n++;
+    }
+  printf("\n Item successfully deleted... Deleted item is %d", ditem);
+  return;
+}
+
+
+void qdisp() {
+  for (int i=0; i<=top1; i++)
+    printf("  %d  ", a[i]);
+}
+
+
+
+int main() {
+  int i, o = 0, item;
+  do {
+    printf("\n \n \n Menu:");
+    printf("\n \n Which operation do you want to perform?");
+    printf("\n 1. Insertion");
+    printf("\n 2. Deletion ");
+    printf("\n 3. Queue Display ");
+    printf("\n 4.Exit");
+    printf("\n Enter an option  ");
+    scanf("%d", &o);
+    switch (o) {
+    case 1:
+      printf("\n Enter the element you want to insert ");
+      scanf("%d", &item);
+      qins(item);
+      break;
+
+    case 2:
+     qdel();
+      break;
+
+    case 3:
+      qdisp();
+      break;
+
+    case 4:
+      exit(0);
+      break;
+    default:
+      printf("\n Invalid Input");
+    }
+  } while (o != 4);
+
+  return 0;
+}
